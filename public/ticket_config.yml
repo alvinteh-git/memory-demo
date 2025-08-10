@@ -1,0 +1,164 @@
+# Ticket System Configuration
+# This file defines all tunable parameters for the arcade ticket system
+# Values can be adjusted to achieve desired Return to Player (RTP) percentage
+
+# Demo Mode Settings
+demo:
+  enabled: true
+  starting_balance: 100.00
+  allow_reset: true
+  show_statistics: true
+
+# Core Game Economics
+game:
+  cost_to_play: 10.00
+  ticket_precision: 2  # Decimal places for ticket amounts
+  
+# Difficulty Settings
+# Adjusts time limits and rewards
+difficulty_settings:
+  easy:
+    name: "Easy"
+    reward_multiplier: 0.50  # 50% of normal rewards
+    pattern_display_time_multiplier: 1.50  # 150% time to view pattern
+    response_time_multiplier: 1.50  # 150% time to respond
+    description: "More time, fewer tickets"
+  
+  normal:
+    name: "Normal"
+    reward_multiplier: 1.00  # 100% rewards
+    pattern_display_time_multiplier: 1.00  # Standard time
+    response_time_multiplier: 1.00  # Standard time
+    description: "Standard challenge"
+  
+  hard:
+    name: "Hard"
+    reward_multiplier: 2.00  # 200% rewards
+    pattern_display_time_multiplier: 0.50  # 50% time to view pattern
+    response_time_multiplier: 0.50  # 50% time to respond
+    description: "Less time, more tickets"
+
+# Default difficulty
+default_difficulty: "normal"
+  
+# Base reward value that all round multipliers reference
+# Adjust this single value to tune overall RTP
+base_reward: 2.50
+
+# Round completion multipliers
+# Each round's reward = base_reward × round_multiplier × variation_bonus
+round_multipliers:
+  - 0.01   # Round 1 (Tutorial)
+  - 0.10   # Round 2
+  - 0.20   # Round 3
+  - 0.35   # Round 4
+  - 0.50   # Round 5
+  - 0.70   # Round 6
+  - 0.90   # Round 7
+  - 1.15   # Round 8
+  - 1.40   # Round 9
+  - 1.70   # Round 10
+  - 2.00   # Round 11
+  - 2.35   # Round 12
+  - 2.75   # Round 13
+  - 3.20   # Round 14
+  - 3.70   # Round 15
+  - 4.30   # Round 16
+  - 5.00   # Round 17
+  - 5.80   # Round 18
+  - 6.70   # Round 19
+  - 8.00   # Round 20
+  # Rounds 21+ use formula: 8.00 + (round - 20) × 1.0
+
+# Variation difficulty bonuses
+# Applied as additional multipliers when variations are active
+variation_bonuses:
+  none: 1.00
+  reverse: 1.15
+  ghost: 1.15
+  speed_chaos: 1.20
+  color_shuffle: 1.15
+  selective: 1.20
+  reverse_combo: 1.35
+
+# Disabled Variations Penalty
+# When variations are disabled in settings, rewards are reduced
+disabled_variation_penalties:
+  # Penalty per disabled variation (multiplicative)
+  per_variation_penalty: 0.05  # 5% reduction per disabled variation
+  # Maximum total penalty
+  max_penalty: 0.25  # Maximum 25% reduction
+  # Formula: reward × (1 - min(num_disabled × per_variation_penalty, max_penalty))
+
+# Display and UI Configuration
+display:
+  show_balance: true
+  show_earned: true
+  show_next_reward: true
+  animate_rewards: true
+  decimal_format: "0.00"  # Always show 2 decimal places
+  
+# Reward Feedback Thresholds
+# Different visual/audio feedback based on reward size
+feedback_thresholds:
+  small: 1.00    # Standard white text
+  medium: 5.00   # Gold text with particle effect
+  large: 10.00   # Green text with celebration animation
+  mega: 20.00    # Rainbow effect with fanfare
+
+# Animation Timings (milliseconds)
+animations:
+  ticket_increment_duration: 1000
+  per_ticket_delay: 50  # For counting animation
+  celebration_duration: 2000
+  balance_flash_duration: 500
+
+# Sound Configuration
+sounds:
+  enabled: true
+  ticket_award: "ticket_chime.wav"
+  counting: "tick.wav"
+  milestone: "achievement.wav"
+  insufficient_funds: "error.wav"
+
+# Session Tracking
+tracking:
+  save_statistics: true
+  track_rtp: true
+  track_distribution: true
+  max_history: 1000  # Maximum games to track
+
+# Limits and Constraints
+limits:
+  max_balance: 9999.99
+  min_balance: 0.00
+  max_single_payout: 200.00  # Safety limit
+  max_round: 50  # Absolute maximum round
+
+# RTP Target (for reference/monitoring only)
+# The actual RTP emerges from the multipliers above
+rtp_target: 0.90  # 90%
+
+# Player Skill Distribution Model (for RTP calculation reference)
+# Probability of average player reaching each round
+player_distribution:
+  1: 1.00
+  2: 0.95
+  3: 0.85
+  4: 0.75
+  5: 0.65
+  6: 0.55
+  7: 0.45
+  8: 0.35
+  9: 0.28
+  10: 0.22
+  11: 0.17
+  12: 0.13
+  13: 0.10
+  14: 0.07
+  15: 0.05
+  16: 0.035
+  17: 0.025
+  18: 0.015
+  19: 0.01
+  20: 0.005

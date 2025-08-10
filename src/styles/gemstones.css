@@ -1,0 +1,349 @@
+/* Gemstone Visual Styles - Based on color-palette.yaml */
+
+:root {
+  /* Background */
+  --bg-primary: #F5E6CF;
+  
+  /* Gemstone Colors */
+  --gem-emerald: #0CF574;
+  --gem-emerald-hover: #0FFF7D;
+  --gem-emerald-active: #0AD666;
+  --gem-emerald-glow: rgba(12, 245, 116, 0.6);
+  
+  --gem-trillion: #DB5461;
+  --gem-trillion-hover: #E45D6B;
+  --gem-trillion-active: #CC4B57;
+  --gem-trillion-glow: rgba(219, 84, 97, 0.6);
+  
+  --gem-marquise: #6461A0;
+  --gem-marquise-hover: #6D6AAA;
+  --gem-marquise-active: #5A5896;
+  --gem-marquise-glow: rgba(100, 97, 160, 0.6);
+  
+  --gem-cushion: #1CCAD8;
+  --gem-cushion-hover: #20D4E2;
+  --gem-cushion-active: #18B6C3;
+  --gem-cushion-glow: rgba(28, 202, 216, 0.6);
+  
+  /* UI Colors */
+  --text-primary: #2C2C2C;
+  --text-secondary: #4A4A4A;
+  --text-disabled: #9B9B9B;
+  
+  /* Timer Colors */
+  --timer-bg: rgba(155, 155, 155, 0.3);
+  --timer-normal-start: #4CAF50;
+  --timer-normal-end: #8BC34A;
+  --timer-warning-start: #FF9800;
+  --timer-warning-end: #FF5722;
+  --timer-critical-start: #F44336;
+  --timer-critical-end: #D32F2F;
+  
+  /* Feedback Colors */
+  --feedback-success: #4CAF50;
+  --feedback-error: #F44336;
+  --feedback-warning: #FF9800;
+  --feedback-info: #2196F3;
+  
+  /* Shadow Effects */
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+  --shadow-dark: rgba(0, 0, 0, 0.3);
+}
+
+/* Game Container Background */
+.game-container {
+  background-color: var(--bg-primary);
+  height: 100vh;
+  width: 100vw;
+  color: var(--text-primary);
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* Gemstone Base Styles */
+.gemstone {
+  opacity: 1;
+  transition: all 200ms ease-out;
+  cursor: pointer;
+  filter: drop-shadow(2px 2px 4px var(--shadow-light));
+  will-change: transform, opacity;
+}
+
+.gemstone:hover:not(.inactive) {
+  opacity: 1;
+  transform: scale(1.05);
+  filter: drop-shadow(2px 4px 6px var(--shadow-medium));
+}
+
+.gemstone.active {
+  opacity: 1;
+  transform: scale(0.95);
+  transition: all 100ms ease-in;
+}
+
+.gemstone.highlighted {
+  animation: pulse 400ms ease-in-out;
+  opacity: 1;
+}
+
+.gemstone.inactive {
+  opacity: 0.3;
+  filter: grayscale(50%) drop-shadow(2px 2px 4px var(--shadow-light));
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Gem-specific Colors */
+.gemstone.emerald {
+  fill: var(--gem-emerald);
+}
+
+.gemstone.emerald:hover:not(.inactive) {
+  fill: var(--gem-emerald-hover);
+}
+
+.gemstone.emerald.active {
+  fill: var(--gem-emerald-active);
+  filter: drop-shadow(0 0 20px var(--gem-emerald-glow));
+}
+
+.gemstone.emerald.highlighted {
+  filter: drop-shadow(0 0 30px var(--gem-emerald-glow));
+}
+
+.gemstone.trillion {
+  fill: var(--gem-trillion);
+}
+
+.gemstone.trillion:hover:not(.inactive) {
+  fill: var(--gem-trillion-hover);
+}
+
+.gemstone.trillion.active {
+  fill: var(--gem-trillion-active);
+  filter: drop-shadow(0 0 20px var(--gem-trillion-glow));
+}
+
+.gemstone.trillion.highlighted {
+  filter: drop-shadow(0 0 30px var(--gem-trillion-glow));
+}
+
+.gemstone.marquise {
+  fill: var(--gem-marquise);
+}
+
+.gemstone.marquise:hover:not(.inactive) {
+  fill: var(--gem-marquise-hover);
+}
+
+.gemstone.marquise.active {
+  fill: var(--gem-marquise-active);
+  filter: drop-shadow(0 0 20px var(--gem-marquise-glow));
+}
+
+.gemstone.marquise.highlighted {
+  filter: drop-shadow(0 0 30px var(--gem-marquise-glow));
+}
+
+.gemstone.cushion {
+  fill: var(--gem-cushion);
+}
+
+.gemstone.cushion:hover:not(.inactive) {
+  fill: var(--gem-cushion-hover);
+}
+
+.gemstone.cushion.active {
+  fill: var(--gem-cushion-active);
+  filter: drop-shadow(0 0 20px var(--gem-cushion-glow));
+}
+
+.gemstone.cushion.highlighted {
+  filter: drop-shadow(0 0 30px var(--gem-cushion-glow));
+}
+
+/* Ghost variation opacity */
+.gemstone.ghost {
+  opacity: var(--ghost-opacity, 0.4);
+}
+
+/* Shining variation effect */
+.gemstone.shining {
+  animation: shine 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes shine {
+  0%, 100% {
+    opacity: 0.85;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.3) drop-shadow(0 0 20px currentColor);
+  }
+}
+
+/* Timer Visual States */
+.timer-bar {
+  height: 8px;
+  border-radius: 4px;
+  background-color: var(--timer-bg);
+  overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.timer-fill {
+  height: 100%;
+  transition: width 100ms linear;
+  border-radius: 2px;
+}
+
+.timer-fill.normal {
+  background: linear-gradient(90deg, var(--timer-normal-start), var(--timer-normal-end));
+}
+
+.timer-fill.warning {
+  background: linear-gradient(90deg, var(--timer-warning-start), var(--timer-warning-end));
+}
+
+.timer-fill.critical {
+  background: linear-gradient(90deg, var(--timer-critical-start), var(--timer-critical-end));
+  animation: timer-pulse 500ms ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Layout Configurations */
+
+/* Diamond Layout (Desktop/Portrait) */
+.diamond {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.diamond .gemstone-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* Line Layout (Mobile Landscape) */
+.line {
+  width: 100%;
+  height: 100%;
+}
+
+.line .gemstone-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0 15px;
+  pointer-events: auto;
+}
+
+/* Responsive adjustments handled via JavaScript for better control */
+
+/* Play Button Pulse Animation */
+@keyframes gem-color-pulse {
+  0%, 100% {
+    border-color: var(--gem-emerald);
+    box-shadow: 0 0 20px rgba(12, 245, 116, 0.3);
+    transform: scale(1.02);
+  }
+  12% {
+    border-color: #2C2C2C;
+    box-shadow: none;
+    transform: scale(1);
+  }
+  25% {
+    border-color: var(--gem-trillion);
+    box-shadow: 0 0 20px rgba(219, 84, 97, 0.3);
+    transform: scale(1.02);
+  }
+  37% {
+    border-color: #2C2C2C;
+    box-shadow: none;
+    transform: scale(1);
+  }
+  50% {
+    border-color: var(--gem-marquise);
+    box-shadow: 0 0 20px rgba(100, 97, 160, 0.3);
+    transform: scale(1.02);
+  }
+  62% {
+    border-color: #2C2C2C;
+    box-shadow: none;
+    transform: scale(1);
+  }
+  75% {
+    border-color: var(--gem-cushion);
+    box-shadow: 0 0 20px rgba(28, 202, 216, 0.3);
+    transform: scale(1.02);
+  }
+  87% {
+    border-color: #2C2C2C;
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+
+.play-button-pulse {
+  animation: gem-color-pulse 12s ease-in-out infinite;
+  transition: all 0.2s ease;
+  color: #2C2C2C !important;
+}
+
+.play-button-pulse:hover {
+  animation-play-state: paused;
+  background: linear-gradient(90deg, var(--gem-emerald), var(--gem-trillion), var(--gem-marquise), var(--gem-cushion));
+  color: white !important;
+  transform: scale(1.05) !important;
+}
+
+/* Feedback Messages */
+.message-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.message-overlay.your-turn {
+  color: var(--feedback-success);
+  font-size: 24px;
+  text-shadow: 0 2px 4px var(--shadow-dark);
+}
+
+.message-overlay.game-over {
+  color: var(--feedback-error);
+  font-size: 32px;
+  text-shadow: 0 2px 4px var(--shadow-dark);
+}
