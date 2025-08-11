@@ -36,6 +36,7 @@ export const GameBoard: React.FC = () => {
     pattern, 
     totalEarned,
     startGame: startGameBase,
+    continueToNextRound,
     handleGemClick: handleGemClickBase,
     resetGame: resetGameBase,
     updateGameState
@@ -65,29 +66,6 @@ export const GameBoard: React.FC = () => {
 
 
 
-  const startGame = useCallback(async () => {
-    startGameBase();
-    
-    // Start background music when game begins (if not already playing)
-    if (!getIsMusicPlaying()) {
-      await startBackgroundMusic();
-    }
-    
-    const currentState = game.getState();
-    
-    if (currentState === GameState.CALIBRATION || 
-        currentState === GameState.PATTERN_DISPLAY) {
-      displayPattern();
-    } else if (currentState === GameState.VARIATION_INTRO) {
-      // Show variation intro for 3 seconds, then start pattern display
-      setTimeout(() => {
-        game.startPatternDisplay();
-        updateGameState();
-        displayPattern();
-      }, 3000);
-    }
-  }, [game, startGameBase, updateGameState, startBackgroundMusic, getIsMusicPlaying]);
-
   const handleTimeout = useCallback(() => {
     game.handlePlayerInput(GemstoneType.EMERALD); // Force fail
     updateGameState();
@@ -114,6 +92,47 @@ export const GameBoard: React.FC = () => {
     );
   }, [game, round, applyVariationEffects, setColorMap, chaosTimings, displayPatternBase, updateGameState, startTimerWithTimeout, playGemSound]);
 
+  const startGame = useCallback(async () => {
+    startGameBase();
+    
+    // Start background music when game begins (if not already playing)
+    if (!getIsMusicPlaying()) {
+      await startBackgroundMusic();
+    }
+    
+    const currentState = game.getState();
+    
+    if (currentState === GameState.CALIBRATION || 
+        currentState === GameState.PATTERN_DISPLAY) {
+      displayPattern();
+    } else if (currentState === GameState.VARIATION_INTRO) {
+      // Show variation intro for 3 seconds, then start pattern display
+      setTimeout(() => {
+        game.startPatternDisplay();
+        updateGameState();
+        displayPattern();
+      }, 3000);
+    }
+  }, [game, startGameBase, updateGameState, startBackgroundMusic, getIsMusicPlaying, displayPattern]);
+
+  const continueNextRound = useCallback(() => {
+    continueToNextRound();
+    
+    const currentState = game.getState();
+    
+    if (currentState === GameState.CALIBRATION || 
+        currentState === GameState.PATTERN_DISPLAY) {
+      displayPattern();
+    } else if (currentState === GameState.VARIATION_INTRO) {
+      // Show variation intro for 3 seconds, then start pattern display
+      setTimeout(() => {
+        game.startPatternDisplay();
+        updateGameState();
+        displayPattern();
+      }, 3000);
+    }
+  }, [game, continueToNextRound, updateGameState, displayPattern]);
+
   const handleGemClick = useCallback((gemType: GemstoneType) => {
     // Play sound when gem is clicked
     playGemSound(gemType);
@@ -124,14 +143,19 @@ export const GameBoard: React.FC = () => {
       canInput,
       handleGemClickBase,
       (value) => { /* setCanInput is managed by usePatternDisplay hook */ },
-      startGame, // onRoundComplete
+      () => { // onRoundComplete
+        // Update state first to capture ROUND_COMPLETE and award tickets
+        updateGameState();
+        // Then continue to the next round without charging tickets
+        continueNextRound();
+      },
       () => { // onVariationIntro
         game.startPatternDisplay();
         updateGameState();
         displayPattern();
       }
     );
-  }, [game, canInput, handleGemClickBase, handleGemClickWrapper, startGame, updateGameState, displayPattern, playGemSound]);
+  }, [game, canInput, handleGemClickBase, handleGemClickWrapper, continueNextRound, updateGameState, displayPattern, playGemSound]);
 
   const resetGame = useCallback(() => {
     resetGameBase();

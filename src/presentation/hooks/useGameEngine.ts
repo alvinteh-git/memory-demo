@@ -10,6 +10,7 @@ interface UseGameEngineResult {
   pattern: GemstoneType[];
   totalEarned: number;
   startGame: () => void;
+  continueToNextRound: () => void;
   handleGemClick: (gemType: GemstoneType, canInput: boolean) => boolean;
   resetGame: () => void;
   updateGameState: () => void;
@@ -48,6 +49,12 @@ export const useGameEngine = (ticketManager: TicketManager | null): UseGameEngin
     updateGameState();
   }, [game, ticketManager, updateGameState]);
 
+  const continueToNextRound = useCallback(() => {
+    // Continue to next round without charging tickets
+    game.continueToNextRound();
+    updateGameState();
+  }, [game, updateGameState]);
+
   const handleGemClick = useCallback((gemType: GemstoneType, canInput: boolean): boolean => {
     if (!canInput) return false;
     
@@ -81,6 +88,7 @@ export const useGameEngine = (ticketManager: TicketManager | null): UseGameEngin
     pattern,
     totalEarned,
     startGame,
+    continueToNextRound,
     handleGemClick,
     resetGame,
     updateGameState

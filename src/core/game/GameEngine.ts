@@ -260,6 +260,11 @@ export class GameEngine {
     return false; // Insufficient funds
   }
 
+  public continueToNextRound(): void {
+    // This method is used to continue to the next round without charging tickets
+    this.startGame();
+  }
+
   // Getters
   public getState(): GameState {
     return this.state;
