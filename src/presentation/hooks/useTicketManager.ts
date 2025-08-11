@@ -12,7 +12,9 @@ export const useTicketManager = (): UseTicketManagerResult => {
 
   // Load ticket configuration on mount
   useEffect(() => {
-    loadTicketConfig('/ticket_config.yml').then(config => {
+    // Use base URL for GitHub Pages compatibility
+    const configPath = import.meta.env.BASE_URL + 'ticket_config.yml';
+    loadTicketConfig(configPath).then(config => {
       const tm = new TicketManager(config);
       setTicketManager(tm);
     }).catch(error => {
@@ -24,7 +26,8 @@ export const useTicketManager = (): UseTicketManagerResult => {
     if (ticketManager) {
       ticketManager.reset();
       // Force re-render by re-loading config
-      loadTicketConfig('/ticket_config.yml').then(config => {
+      const configPath = import.meta.env.BASE_URL + 'ticket_config.yml';
+      loadTicketConfig(configPath).then(config => {
         const tm = new TicketManager(config);
         setTicketManager(tm);
       }).catch(error => {
