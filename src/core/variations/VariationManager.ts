@@ -12,11 +12,11 @@ export class VariationManager {
    */
   getAvailableVariations(round: number): GameVariation[] {
     if (round === 1) return [];
-    if (round <= 4) return [GameVariation.REVERSE];
-    if (round <= 7) return [GameVariation.REVERSE, GameVariation.GHOST];
-    if (round <= 10) return [GameVariation.REVERSE, GameVariation.GHOST, GameVariation.SPEED_CHAOS];
-    if (round <= 13) return [GameVariation.REVERSE, GameVariation.GHOST, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE];
-    if (round <= 16) return [GameVariation.REVERSE, GameVariation.GHOST, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE, GameVariation.SELECTIVE_ATTENTION];
+    if (round <= 4) return [GameVariation.GHOST];
+    if (round <= 7) return [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION];
+    if (round <= 10) return [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION, GameVariation.SPEED_CHAOS];
+    if (round <= 13) return [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE];
+    if (round <= 16) return [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE, GameVariation.REVERSE];
     // Round 17+: Combination mode
     return [GameVariation.REVERSE_COMBINATION];
   }
@@ -110,9 +110,9 @@ export class VariationManager {
    */
   getGhostOpacity(round: number): number {
     if (round >= 17) return 0.2; // Combination mode
-    if (round === 7) return 0.3;
-    if (round === 6) return 0.35;
-    return 0.4; // Round 5
+    if (round === 4) return 0.3;
+    if (round === 3) return 0.35;
+    return 0.4; // Round 2
   }
 
   /**
@@ -177,12 +177,12 @@ export class VariationManager {
     
     if (round >= 17) {
       percentage = 0.3; // Combination mode: 30%
-    } else if (round === 16) {
+    } else if (round === 7) {
       percentage = 0.4;
-    } else if (round === 15) {
+    } else if (round === 6) {
       percentage = 0.5;
     } else {
-      percentage = 0.6; // Round 14
+      percentage = 0.6; // Round 5
     }
     
     const count = Math.max(1, Math.round(pattern.length * percentage));

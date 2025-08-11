@@ -15,23 +15,23 @@ describe('VariationManager', () => {
       expect(available).toEqual([]);
     });
 
-    it('should unlock REVERSE for rounds 2-4', () => {
-      expect(manager.getAvailableVariations(2)).toEqual([GameVariation.REVERSE]);
-      expect(manager.getAvailableVariations(3)).toEqual([GameVariation.REVERSE]);
-      expect(manager.getAvailableVariations(4)).toEqual([GameVariation.REVERSE]);
+    it('should unlock GHOST for rounds 2-4', () => {
+      expect(manager.getAvailableVariations(2)).toEqual([GameVariation.GHOST]);
+      expect(manager.getAvailableVariations(3)).toEqual([GameVariation.GHOST]);
+      expect(manager.getAvailableVariations(4)).toEqual([GameVariation.GHOST]);
     });
 
-    it('should unlock GHOST for rounds 5-7', () => {
+    it('should unlock SELECTIVE_ATTENTION for rounds 5-7', () => {
       const available = manager.getAvailableVariations(5);
-      expect(available).toContain(GameVariation.REVERSE);
       expect(available).toContain(GameVariation.GHOST);
+      expect(available).toContain(GameVariation.SELECTIVE_ATTENTION);
       expect(available).toHaveLength(2);
     });
 
     it('should unlock SPEED_CHAOS for rounds 8-10', () => {
       const available = manager.getAvailableVariations(8);
-      expect(available).toContain(GameVariation.REVERSE);
       expect(available).toContain(GameVariation.GHOST);
+      expect(available).toContain(GameVariation.SELECTIVE_ATTENTION);
       expect(available).toContain(GameVariation.SPEED_CHAOS);
       expect(available).toHaveLength(3);
     });
@@ -42,10 +42,10 @@ describe('VariationManager', () => {
       expect(available).toContain(GameVariation.COLOR_SHUFFLE);
     });
 
-    it('should unlock SELECTIVE_ATTENTION for rounds 14-16', () => {
+    it('should unlock REVERSE for rounds 14-16', () => {
       const available = manager.getAvailableVariations(14);
       expect(available).toHaveLength(5);
-      expect(available).toContain(GameVariation.SELECTIVE_ATTENTION);
+      expect(available).toContain(GameVariation.REVERSE);
     });
 
     it('should enable combination mode for round 17+', () => {
@@ -59,15 +59,15 @@ describe('VariationManager', () => {
     it('should select a variation every 3 rounds', () => {
       // Round 2: Select new variation
       const variation2 = manager.selectVariation(2);
-      expect(variation2).toBe(GameVariation.REVERSE);
+      expect(variation2).toBe(GameVariation.GHOST);
       
       // Rounds 3-4: Keep same variation
-      expect(manager.selectVariation(3)).toBe(GameVariation.REVERSE);
-      expect(manager.selectVariation(4)).toBe(GameVariation.REVERSE);
+      expect(manager.selectVariation(3)).toBe(GameVariation.GHOST);
+      expect(manager.selectVariation(4)).toBe(GameVariation.GHOST);
       
       // Round 5: Select new variation
       const variation5 = manager.selectVariation(5);
-      expect([GameVariation.REVERSE, GameVariation.GHOST]).toContain(variation5);
+      expect([GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION]).toContain(variation5);
       
       // Rounds 6-7: Keep same variation
       expect(manager.selectVariation(6)).toBe(variation5);
@@ -76,23 +76,23 @@ describe('VariationManager', () => {
 
     it('should not repeat the previous variation when selecting new one', () => {
       // Force a specific variation for rounds 2-4
-      manager.selectVariation(2); // REVERSE
+      manager.selectVariation(2); // GHOST
       manager.selectVariation(3);
       manager.selectVariation(4);
       
-      // Round 5 should not be REVERSE (when pool has 2 options)
+      // Round 5 should not be GHOST (when pool has 2 options)
       const selections = new Set<GameVariation>();
       for (let i = 0; i < 20; i++) {
         manager = new VariationManager(); // Reset
-        manager.selectVariation(2); // REVERSE
+        manager.selectVariation(2); // GHOST
         manager.selectVariation(3);
         manager.selectVariation(4);
         const variation5 = manager.selectVariation(5);
         selections.add(variation5!);
       }
       
-      // Should have selected GHOST at least once (avoiding REVERSE)
-      expect(selections.has(GameVariation.GHOST)).toBe(true);
+      // Should have selected SELECTIVE_ATTENTION at least once (avoiding GHOST)
+      expect(selections.has(GameVariation.SELECTIVE_ATTENTION)).toBe(true);
     });
 
     it('should handle combination mode correctly', () => {
@@ -163,9 +163,9 @@ describe('VariationManager', () => {
     });
 
     it('should scale ghost opacity by round', () => {
-      expect(manager.getGhostOpacity(5)).toBe(0.4);
-      expect(manager.getGhostOpacity(6)).toBe(0.35);
-      expect(manager.getGhostOpacity(7)).toBe(0.3);
+      expect(manager.getGhostOpacity(2)).toBe(0.4);
+      expect(manager.getGhostOpacity(3)).toBe(0.35);
+      expect(manager.getGhostOpacity(4)).toBe(0.3);
       expect(manager.getGhostOpacity(17)).toBe(0.2); // Combination mode
     });
   });
@@ -267,13 +267,13 @@ describe('VariationManager', () => {
     it('should scale shining percentage by round', () => {
       const pattern = Array(10).fill(GemstoneType.EMERALD);
       
-      // Round 14: 60% shining
-      const indices14 = manager.getShiningIndices(pattern, 14);
-      expect(indices14).toHaveLength(6);
+      // Round 5: 60% shining
+      const indices5 = manager.getShiningIndices(pattern, 5);
+      expect(indices5).toHaveLength(6);
       
-      // Round 16: 40% shining
-      const indices16 = manager.getShiningIndices(pattern, 16);
-      expect(indices16).toHaveLength(4);
+      // Round 7: 40% shining
+      const indices7 = manager.getShiningIndices(pattern, 7);
+      expect(indices7).toHaveLength(4);
     });
 
     it('should filter pattern to only shining gems', () => {

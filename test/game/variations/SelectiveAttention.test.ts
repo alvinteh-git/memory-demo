@@ -10,7 +10,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
   });
 
   describe('Shining Indices Selection', () => {
-    it('should mark correct percentage of gems as shining for round 14', () => {
+    it('should mark correct percentage of gems as shining for round 5', () => {
       const pattern: GemstoneType[] = [
         GemstoneType.EMERALD,
         GemstoneType.TRILLION,
@@ -19,12 +19,12 @@ describe('SELECTIVE_ATTENTION Variation', () => {
         GemstoneType.EMERALD
       ];
       
-      const shiningIndices = manager.getShiningIndices(pattern, 14);
+      const shiningIndices = manager.getShiningIndices(pattern, 5);
       
-      // Round 14: 60% should be shining (3 out of 5)
+      // Round 5: 60% should be shining (3 out of 5)
       expect(shiningIndices).toHaveLength(3);
       
-      console.log('Round 14 - Pattern length:', pattern.length);
+      console.log('Round 5 - Pattern length:', pattern.length);
       console.log('Expected shining: 60% (3 gems)');
       console.log('Actual shining indices:', shiningIndices);
     });
@@ -32,23 +32,23 @@ describe('SELECTIVE_ATTENTION Variation', () => {
     it('should mark correct percentage for round 15', () => {
       const pattern: GemstoneType[] = new Array(6).fill(GemstoneType.EMERALD);
       
-      const shiningIndices = manager.getShiningIndices(pattern, 15);
+      const shiningIndices = manager.getShiningIndices(pattern, 6);
       
-      // Round 15: 50% should be shining (3 out of 6)
+      // Round 6: 50% should be shining (3 out of 6)
       expect(shiningIndices).toHaveLength(3);
       
-      console.log('Round 15 - 50% of 6 gems = 3 shining');
+      console.log('Round 6 - 50% of 6 gems = 3 shining');
     });
 
     it('should mark correct percentage for round 16', () => {
       const pattern: GemstoneType[] = new Array(5).fill(GemstoneType.TRILLION);
       
-      const shiningIndices = manager.getShiningIndices(pattern, 16);
+      const shiningIndices = manager.getShiningIndices(pattern, 7);
       
-      // Round 16: 40% should be shining (2 out of 5)
+      // Round 7: 40% should be shining (2 out of 5)
       expect(shiningIndices).toHaveLength(2);
       
-      console.log('Round 16 - 40% of 5 gems = 2 shining');
+      console.log('Round 7 - 40% of 5 gems = 2 shining');
     });
 
     it('should mark minimum 30% in combination mode (round 17+)', () => {
@@ -78,7 +78,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
     it('should return sorted indices', () => {
       const pattern: GemstoneType[] = new Array(8).fill(GemstoneType.EMERALD);
       
-      const shiningIndices = manager.getShiningIndices(pattern, 14);
+      const shiningIndices = manager.getShiningIndices(pattern, 5);
       
       // Indices should be sorted
       for (let i = 1; i < shiningIndices.length; i++) {
@@ -91,7 +91,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
     it('should return unique indices', () => {
       const pattern: GemstoneType[] = new Array(6).fill(GemstoneType.MARQUISE);
       
-      const shiningIndices = manager.getShiningIndices(pattern, 15);
+      const shiningIndices = manager.getShiningIndices(pattern, 6);
       
       // All indices should be unique
       const uniqueIndices = new Set(shiningIndices);
@@ -106,7 +106,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
         GemstoneType.MARQUISE
       ];
       
-      const shiningIndices = manager.getShiningIndices(pattern, 14);
+      const shiningIndices = manager.getShiningIndices(pattern, 5);
       
       shiningIndices.forEach(index => {
         expect(index).toBeGreaterThanOrEqual(0);
@@ -205,10 +205,10 @@ describe('SELECTIVE_ATTENTION Variation', () => {
         GemstoneType.EMERALD
       ];
       
-      const shiningIndices = manager.getShiningIndices(pattern, 14);
+      const shiningIndices = manager.getShiningIndices(pattern, 5);
       
       console.log('\n=== Selective Attention Display Simulation ===');
-      console.log('Round 14 - 60% gems are shining');
+      console.log('Round 5 - 60% gems are shining');
       console.log('\nPattern display:');
       
       pattern.forEach((gem, index) => {
@@ -262,7 +262,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
       
       // Generate multiple shining patterns
       for (let i = 0; i < 20; i++) {
-        const shiningIndices = manager.getShiningIndices(pattern, 14);
+        const shiningIndices = manager.getShiningIndices(pattern, 5);
         patterns.add(shiningIndices.join(','));
       }
       
@@ -278,7 +278,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
     it('should handle empty pattern', () => {
       const pattern: GemstoneType[] = [];
       
-      const shiningIndices = manager.getShiningIndices(pattern, 14);
+      const shiningIndices = manager.getShiningIndices(pattern, 5);
       
       expect(shiningIndices).toEqual([]);
     });
@@ -286,7 +286,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
     it('should handle single gem pattern', () => {
       const pattern: GemstoneType[] = [GemstoneType.CUSHION];
       
-      const shiningIndices = manager.getShiningIndices(pattern, 14);
+      const shiningIndices = manager.getShiningIndices(pattern, 5);
       
       // With one gem, it must shine (at least 1)
       expect(shiningIndices).toEqual([0]);
@@ -300,7 +300,7 @@ describe('SELECTIVE_ATTENTION Variation', () => {
         GemstoneType.TRILLION
       ];
       
-      const shiningIndices = manager.getShiningIndices(pattern, 15);
+      const shiningIndices = manager.getShiningIndices(pattern, 6);
       const filtered = manager.filterShiningGems(pattern, shiningIndices);
       
       console.log('\nRepeated gems with selective attention:');

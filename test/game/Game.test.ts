@@ -266,11 +266,11 @@ describe('GameEngine Class', () => {
     it('should select variations from correct pools at each round range', () => {
       // Test that variations are selected from expanding pools
       const variationPools = [
-        { rounds: [2, 3, 4], possibleVariations: [GameVariation.REVERSE] },
-        { rounds: [5, 6, 7], possibleVariations: [GameVariation.REVERSE, GameVariation.GHOST] },
-        { rounds: [8, 9, 10], possibleVariations: [GameVariation.REVERSE, GameVariation.GHOST, GameVariation.SPEED_CHAOS] },
-        { rounds: [11, 12, 13], possibleVariations: [GameVariation.REVERSE, GameVariation.GHOST, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE] },
-        { rounds: [14, 15, 16], possibleVariations: [GameVariation.REVERSE, GameVariation.GHOST, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE, GameVariation.SELECTIVE_ATTENTION] },
+        { rounds: [2, 3, 4], possibleVariations: [GameVariation.GHOST] },
+        { rounds: [5, 6, 7], possibleVariations: [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION] },
+        { rounds: [8, 9, 10], possibleVariations: [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION, GameVariation.SPEED_CHAOS] },
+        { rounds: [11, 12, 13], possibleVariations: [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE] },
+        { rounds: [14, 15, 16], possibleVariations: [GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION, GameVariation.SPEED_CHAOS, GameVariation.COLOR_SHUFFLE, GameVariation.REVERSE] },
         { rounds: [17, 18, 19], possibleVariations: [GameVariation.REVERSE_COMBINATION] },
       ]
 
@@ -302,32 +302,80 @@ describe('GameEngine Class', () => {
       })
     })
 
-    it('should apply REVERSE variation correctly', () => {
-      // Advance to round 2 to get REVERSE variation
+    it('should apply GHOST variation correctly at round 2', () => {
+      // Advance to round 2 to get GHOST variation
       game.startGame()
       game.startPatternDisplay()
       game.startPlayerInput()
       const pattern1 = game.getPattern()
       pattern1.forEach(gem => game.handlePlayerInput(gem))
       
-      // Now in round 2 with REVERSE (only option in pool)
+      // Now in round 2 with GHOST (only option in pool)
       game.startGame()
-      expect(game.getCurrentVariation()).toBe(GameVariation.REVERSE)
+      expect(game.getCurrentVariation()).toBe(GameVariation.GHOST)
       game.startPatternDisplay()
       game.startPlayerInput()
       
       const pattern = game.getPattern()
-      const reversedPattern = [...pattern].reverse()
       
-      // Should accept reversed input
-      reversedPattern.forEach((gem, index) => {
+      // GHOST doesn't change input, just visual display
+      // Should accept normal pattern
+      pattern.forEach((gem, index) => {
         const result = game.handlePlayerInput(gem)
-        if (index < reversedPattern.length - 1) {
+        if (index < pattern.length - 1) {
           expect(result).toBe(true)
         }
       })
       
       expect(game.getState()).toBe(GameState.ROUND_COMPLETE)
+    })
+
+    it('should apply REVERSE variation correctly at round 14', () => {
+      // Advance to round 14 to get REVERSE variation
+      for (let i = 1; i < 14; i++) {
+        game.startGame()
+        if (game.getState() === GameState.VARIATION_INTRO) {
+          game.startPatternDisplay()
+        }
+        if (game.getState() === GameState.CALIBRATION) {
+          game.startPatternDisplay()
+        }
+        game.startPlayerInput()
+        const pattern = game.getPattern()
+        
+        // Handle variations correctly
+        const variation = game.getCurrentVariation()
+        if (variation === GameVariation.REVERSE || variation === GameVariation.REVERSE_COMBINATION) {
+          const reversedPattern = [...pattern].reverse()
+          reversedPattern.forEach(gem => game.handlePlayerInput(gem))
+        } else {
+          pattern.forEach(gem => game.handlePlayerInput(gem))
+        }
+      }
+      
+      // Now in round 14 - REVERSE should be available
+      game.startGame()
+      const available = game.getVariationManager().getAvailableVariations(14)
+      expect(available).toContain(GameVariation.REVERSE)
+      
+      // If REVERSE was selected, test it
+      if (game.getCurrentVariation() === GameVariation.REVERSE) {
+        game.startPatternDisplay()
+        game.startPlayerInput()
+        
+        const pattern = game.getPattern()
+        const reversedPattern = [...pattern].reverse()
+        
+        // Should accept reversed input
+        reversedPattern.forEach((gem, index) => {
+          const result = game.handlePlayerInput(gem)
+          if (index < reversedPattern.length - 1) {
+            expect(result).toBe(true)
+          }
+        })
+        
+        expect(game.getState()).toBe(GameState.ROUND_COMPLETE)
+      }
     })
 
     it('should avoid repeating previous variation when selecting new one', () => {
@@ -387,7 +435,7 @@ describe('GameEngine Class', () => {
       game.startGame()
       expect(game.getState()).toBe(GameState.VARIATION_INTRO)
       const round2Variation = game.getCurrentVariation()
-      expect(round2Variation).toBe(GameVariation.REVERSE) // Only option in pool
+      expect(round2Variation).toBe(GameVariation.GHOST) // Only option in pool
     })
 
     it('should persist variation for 3-round sets', () => {
@@ -438,7 +486,7 @@ describe('GameEngine Class', () => {
       // Round 5 - should have NEW variation and show intro
       game.startGame()
       const round5Variation = game.getCurrentVariation()
-      expect([GameVariation.REVERSE, GameVariation.GHOST]).toContain(round5Variation)
+      expect([GameVariation.GHOST, GameVariation.SELECTIVE_ATTENTION]).toContain(round5Variation)
       expect(game.getState()).toBe(GameState.VARIATION_INTRO)
     })
 
@@ -456,14 +504,14 @@ describe('GameEngine Class', () => {
       
       const scoreRound1 = game.getScore()
       
-      // Round 2 with REVERSE variation (only option in pool)
+      // Round 2 with GHOST variation (only option in pool)
       game.startGame()
-      expect(game.getCurrentVariation()).toBe(GameVariation.REVERSE)
+      expect(game.getCurrentVariation()).toBe(GameVariation.GHOST)
       if (game.getState() === GameState.VARIATION_INTRO) {
         game.startPatternDisplay()
       }
       game.startPlayerInput()
-      const pattern2 = game.getPattern().reverse() // REVERSE variation requires reversed input
+      const pattern2 = game.getPattern() // GHOST variation doesn't change input pattern
       pattern2.forEach(gem => game.handlePlayerInput(gem))
       
       const scoreRound2 = game.getScore()

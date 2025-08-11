@@ -76,25 +76,25 @@ describe('GHOST Variation', () => {
   });
 
   describe('Ghost Opacity Scaling', () => {
-    it('should return correct opacity for round 5', () => {
-      const opacity = manager.getGhostOpacity(5);
+    it('should return correct opacity for round 2', () => {
+      const opacity = manager.getGhostOpacity(2);
       
       expect(opacity).toBe(0.4);
-      console.log('Round 5 ghost opacity:', opacity);
+      console.log('Round 2 ghost opacity:', opacity);
     });
 
-    it('should return correct opacity for round 6', () => {
-      const opacity = manager.getGhostOpacity(6);
+    it('should return correct opacity for round 3', () => {
+      const opacity = manager.getGhostOpacity(3);
       
       expect(opacity).toBe(0.35);
-      console.log('Round 6 ghost opacity:', opacity);
+      console.log('Round 3 ghost opacity:', opacity);
     });
 
-    it('should return correct opacity for round 7', () => {
-      const opacity = manager.getGhostOpacity(7);
+    it('should return correct opacity for round 4', () => {
+      const opacity = manager.getGhostOpacity(4);
       
       expect(opacity).toBe(0.3);
-      console.log('Round 7 ghost opacity:', opacity);
+      console.log('Round 4 ghost opacity:', opacity);
     });
 
     it('should return minimum opacity in combination mode (round 17+)', () => {
@@ -148,8 +148,8 @@ describe('GHOST Variation', () => {
       });
       
       // Verify opacity decreases over rounds
-      expect(manager.getGhostOpacity(5)).toBeGreaterThan(manager.getGhostOpacity(7));
-      expect(manager.getGhostOpacity(7)).toBeGreaterThan(manager.getGhostOpacity(17));
+      expect(manager.getGhostOpacity(2)).toBeGreaterThan(manager.getGhostOpacity(4));
+      expect(manager.getGhostOpacity(4)).toBeGreaterThan(manager.getGhostOpacity(17));
     });
   });
 
